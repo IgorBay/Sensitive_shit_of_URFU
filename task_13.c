@@ -4,21 +4,30 @@
 #define TRUE 1
 #define FALSE 0
 
-char* get_word(char* string, int word_number);        // Выдаёт слово из строки (на самом деле, указатель на превую букву этого слова)
-_Bool check_match(char* string, int word_number);     // Проверяет совпадение последнего слова с остальными
+
+
+
+char* get_word(char* string, int word_number);              // Выдаёт слово из строки (на самом деле, указатель на превую букву этого слова), (вспомогательная)
+int characters_counter(char* string, int word_number);      // Вылаёт количество букв в слове (вспомогательная)
+_Bool check_match(char* string, int word_number);           // Проверяет совпадение последнего слова с остальными
+_Bool check_alphabet_order(char* string, int word_number);  // Проверяет на расположение букв в слове по алфавиту
+_Bool check_repeat(char* string, int word_number);          // Проверяет на совпадение последней и предпоследней букв в слове
+void print_words(char* string);                             // Печатает нужные слова
+
+
+
 
 int main()
 {
-    char* string_1 = "kjfa abcc bestt igorg bestt.";
+    char* string_1 = "kja abcc bestt igorg bestt.";
 
-    for (int i = 0; i < 5; ++i)
-        printf("%c", *(get_word(string_1, 2) + i));
-    printf("\n");
-
-    printf("%i\n", check_match(string_1, 3));
+    print_words(string_1);
 
     return 0;
 }
+
+
+
 
 char* get_word(char* string, int word_number)
 {
@@ -26,7 +35,7 @@ char* get_word(char* string, int word_number)
     int j = 0;
     int n = 1;
 
-    char word_array[5];            // Такая параша, потому что массив, который создала функция,
+    char word_array[6];            // Такая параша, потому что массив, который создала функция,
     char* word = word_array;       // нельзя передовать, а указатель можно.
 
 /* Типа идём до указанного слова */
@@ -50,15 +59,32 @@ char* get_word(char* string, int word_number)
             break;
         *(word_array + i) = *(string + j + i);
     }
+    *(word_array + i) = '\0';
 
     return word;
 }
+
+
+
+
+int characters_counter(char* string, int word_number)
+{
+    int char_amount = 0;
+
+    for (; *(get_word(string, word_number) + char_amount) != '\0'; ++char_amount)
+    {}
+
+    return char_amount;
+}
+
+
+
 
 _Bool check_match(char* string, int word_number)
 {
     _Bool match;
 
-    for (int i = 0; i < 5; ++i)
+    for (int i = 0; *(get_word(string, word_number) + i) != '\0'; ++i)
     {
         if(*(get_word(string, word_number) + i) == *(get_word(string, 5) + i))
             match = TRUE;
@@ -70,4 +96,58 @@ _Bool check_match(char* string, int word_number)
     }
 
     return match;
+}
+
+
+
+
+_Bool check_alphabet_order(char* string, int word_number)
+{
+    _Bool alph_order;
+
+    for (int i = 1; *(get_word(string, word_number) + i) != '\0'; ++i)
+    {
+        if(*(get_word(string, word_number) + i) >= *(get_word(string, word_number) + i - 1))
+            alph_order = TRUE;
+        else
+        {
+            alph_order = FALSE;
+            break;
+        }
+    }
+
+    return alph_order;
+}
+
+
+
+
+_Bool check_repeat(char* string, int word_number)
+{
+    _Bool repeat;
+
+    if(*(get_word(string, word_number) + characters_counter(string, word_number) - 1) == 
+       *(get_word(string, word_number) + characters_counter(string, word_number) - 2))
+        repeat = TRUE;
+    else
+        repeat = FALSE;
+
+    return repeat;
+}
+
+
+
+void print_words(char* string)
+{
+    for (int i = 1; i != 5 ; ++i)
+    {
+        if(check_match(string, i) == FALSE && 
+           check_alphabet_order(string, i) == TRUE && 
+           check_repeat(string, i) == TRUE)
+        {
+            for (int k = 0; *(get_word(string, i) + k) != '\0'; ++k)
+                printf("%c", *(get_word(string, i) + k));
+        }
+        printf("\n");
+    }
 }
