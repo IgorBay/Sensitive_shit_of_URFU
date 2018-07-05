@@ -8,40 +8,43 @@ char* get_word(char* string, int word_number);
 int main()
 {
     char* string_1 = "kjfh abcc igorg the best.";
-    printf("%s\n", get_word(string_1, 2));           // попробуй с разным вторым аргументом
+
+    for (int i = 0; i < 5; ++i)
+        printf("%c", *(get_word(string_1, 2) + i));
+    printf("\n");
+
     return 0;
 }
 
 char* get_word(char* string, int word_number)
 {
-    int i = 0;
+    int j = 0;
     int n = 1;
 
     char word_array[5];            // Такая параша, потому что массив, который создала функция,
-    char* word;                    // нельзя передовать, а указатель можно.
+    char* word = word_array;       // нельзя передовать, а указатель можно.
 
 /* Типа идём до указанного слова */
     while(n != word_number)
     {
-        while((*(string + i) != ' ')/* || (*(string + i) != '.')*/)
-            ++i;
-        while(*(string + i) == ' ')
-            ++i;
+        while(*(string + j) != ' ')
+        {
+            if(*(string + j) == '.')
+                break;
+            ++j;
+        }
+        while(*(string + j) == ' ')
+            ++j;
         ++n;
     }
 
 /* И записываем его отдельно */
-    for (int j = 0; *(string + j + i) != ' '; ++j)
+    for (int i = 0; *(string + i + j) != ' '; ++i)
     {
-        *(word_array + j) = *(string + j + i);
+        if(*(string + i + j) == '.')
+            break;
+        *(word_array + i) = *(string + j + i);
     }
-
-    word = word_array;
-
-    printf("%s, %s\n", word_array, word);
-
-/* Хз, Игорян, это какая-то дичь.
-   Внутри себя она выводит word, а возвращать его не хочет*/
 
     return word;
 }
