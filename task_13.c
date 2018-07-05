@@ -1,23 +1,28 @@
 #include <stdio.h>
 #include <string.h>
 
-/* В функцию даёшь саму строку и номер слова, которое хочешь взять.
-   Она выдаёт тебе это слово отдельной строкой. */
-char* get_word(char* string, int word_number);
+#define TRUE 1
+#define FALSE 0
+
+char* get_word(char* string, int word_number);        // Выдаёт слово из строки (на самом деле, указатель на превую букву этого слова)
+_Bool check_match(char* string, int word_number);     // Проверяет совпадение последнего слова с остальными
 
 int main()
 {
-    char* string_1 = "kjfh abcc igorg the best.";
+    char* string_1 = "kjfa abcc bestt igorg bestt.";
 
     for (int i = 0; i < 5; ++i)
         printf("%c", *(get_word(string_1, 2) + i));
     printf("\n");
+
+    printf("%i\n", check_match(string_1, 3));
 
     return 0;
 }
 
 char* get_word(char* string, int word_number)
 {
+    int i = 0;
     int j = 0;
     int n = 1;
 
@@ -39,7 +44,7 @@ char* get_word(char* string, int word_number)
     }
 
 /* И записываем его отдельно */
-    for (int i = 0; *(string + i + j) != ' '; ++i)
+    for (; *(string + i + j) != ' '; ++i)
     {
         if(*(string + i + j) == '.')
             break;
@@ -47,4 +52,22 @@ char* get_word(char* string, int word_number)
     }
 
     return word;
+}
+
+_Bool check_match(char* string, int word_number)
+{
+    _Bool match;
+
+    for (int i = 0; i < 5; ++i)
+    {
+        if(*(get_word(string, word_number) + i) == *(get_word(string, 5) + i))
+            match = TRUE;
+        else
+        {
+            match = FALSE;
+            break;
+        }
+    }
+
+    return match;
 }
